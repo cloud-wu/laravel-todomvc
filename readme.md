@@ -4,7 +4,7 @@
 
     git clone https://github.com/cloud-wu/laravel-todomvc.git
 
-    cd quickstart
+    cd laravel-todomvc
 
     composer install
     
