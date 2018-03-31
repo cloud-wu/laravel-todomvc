@@ -9,7 +9,7 @@
                 <div class="panel-body">
 
                     <!-- New Task Form -->
-                    <form action="" method="POST" class="form-horizontal">
+                    <form @submit.prevent="add" class="form-horizontal">
 
                         <!-- Task Name -->
                         <div class="form-group">
@@ -46,15 +46,13 @@
                         </thead>
                         <tbody>
                         <tr v-for="task in view.tasks" :key="task.id">
-                            <td class="table-text"><div>task.name</div></td>
+                            <td class="table-text"><div>{{ task.name }}</div></td>
 
                             <!-- Task Delete Button -->
                             <td>
-                                <form action="" method="POST">
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa fa-btn fa-trash"></i>Delete
-                                    </button>
-                                </form>
+                                <button @click.prevent.stop="remove(task.id)" type="submit" class="btn btn-danger">
+                                    <i class="fa fa-btn fa-trash"></i>Delete
+                                </button>
                             </td>
                         </tr>
                         </tbody>
@@ -70,6 +68,7 @@
     export default {
         data () {
             return {
+                currentId: 3,
                 form: {
                     task: ''
                 },
@@ -85,6 +84,23 @@
         computed: {
             hasTasks () {
                 return this.view.tasks.length > 0;
+            }
+        },
+        methods: {
+            add () {
+                if (this.form.task === '') {
+                    return false;
+                }
+
+                this.currentId++;
+                this.view.tasks.push({ id: this.currentId, name: this.form.task });
+                this.resetForm();
+            },
+            remove (id) {
+                this.view.tasks = this.view.tasks.filter(task => task.id !== id);
+            },
+            resetForm () {
+                this.form.task = '';
             }
         }
     }
