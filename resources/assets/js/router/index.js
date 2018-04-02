@@ -14,7 +14,7 @@ export default new Router({
         },
         {
             path: '/task',
-            component: Task
+             component: Task
         },
     ]
 });

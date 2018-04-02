@@ -16,7 +16,7 @@
                             <label for="task-name" class="col-sm-3 control-label">Task</label>
 
                             <div class="col-sm-6">
-                                <input type="text" id="task-name" class="form-control" v-model="form.task">
+                                <input type="text" id="task-name" class="form-control" v-model="form.name">
                             </div>
                         </div>
 
@@ -70,16 +70,15 @@
             return {
                 currentId: 3,
                 form: {
-                    task: ''
+                    name: ''
                 },
                 view: {
-                    tasks: [
-                        { id: 1, name: 'task1' },
-                        { id: 2, name: 'task2' },
-                        { id: 3, name: 'task3' },
-                    ]
+                    tasks: []
                 }
             }
+        },
+        created () {
+            this.fetchTasks();
         },
         computed: {
             hasTasks () {
@@ -87,20 +86,37 @@
             }
         },
         methods: {
+            fetchTasks () {
+                axios.get('/api/task')
+                    .then(response => {
+                        this.view.tasks = response.data;
+                    });
+            },
             add () {
                 if (this.form.task === '') {
                     return false;
                 }
 
-                this.currentId++;
-                this.view.tasks.push({ id: this.currentId, name: this.form.task });
-                this.resetForm();
+                axios.post('/api/task', this.form)
+                    .then(() => {
+                        this.fetchTasks();
+                        this.resetForm();
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
             },
             remove (id) {
-                this.view.tasks = this.view.tasks.filter(task => task.id !== id);
+                axios.delete('/api/task/' + id)
+                    .then(() => {
+                        this.fetchTasks();
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
             },
             resetForm () {
-                this.form.task = '';
+                this.form.name = '';
             }
         }
     }
