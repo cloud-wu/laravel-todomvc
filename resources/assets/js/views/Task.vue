@@ -93,8 +93,9 @@
                     });
             },
             add () {
-                if (this.form.task === '') {
-                    return false;
+                if (this.form.name === '') {
+                    alert('任務名稱不可為空白');
+                    return;
                 }
 
                 axios.post('/api/task', this.form)
