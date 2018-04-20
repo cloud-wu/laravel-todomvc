@@ -8,6 +8,8 @@
 
                 <div class="panel-body">
 
+                    <error-list v-if="hasErrors" :errors="errors"></error-list>
+
                     <!-- New Task Form -->
                     <form @submit.prevent="add" class="form-horizontal">
 
@@ -65,16 +67,21 @@
 </template>
 
 <script>
+    import ErrorList from '../components/ErrorList'
+
     export default {
+        components: {
+            ErrorList
+        },
         data () {
             return {
-                currentId: 3,
                 form: {
                     name: ''
                 },
                 view: {
                     tasks: []
-                }
+                },
+                errors: [],
             }
         },
         created () {
@@ -83,6 +90,9 @@
         computed: {
             hasTasks () {
                 return this.view.tasks.length > 0;
+            },
+            hasErrors () {
+                return this.errors.length > 0; 
             }
         },
         methods: {
@@ -93,10 +103,7 @@
                     });
             },
             add () {
-                if (this.form.name === '') {
-                    alert('任務名稱不可為空白');
-                    return;
-                }
+                this.resetError();
 
                 axios.post('/api/task', this.form)
                     .then(() => {
@@ -104,7 +111,7 @@
                         this.resetForm();
                     })
                     .catch(error => {
-                        console.log(error)
+                        this.errors = error.response.data.errors.name;
                     });
             },
             remove (id) {
@@ -118,6 +125,9 @@
             },
             resetForm () {
                 this.form.name = '';
+            },
+            resetError () {
+                this.errors = [];
             }
         }
     }
