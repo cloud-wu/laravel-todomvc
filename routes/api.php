@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::prefix('task')->group(function () {
-    Route::get('/', 'TaskController@index');
-    Route::post('/', 'TaskController@store');
-    Route::delete('/{id}', 'TaskController@delete');
-});
+Route::resource('task', 'TaskController')->only([
+    'index', 'store', 'destroy'
+]);

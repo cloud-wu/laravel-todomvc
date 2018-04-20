@@ -25,7 +25,7 @@ class TaskController extends Controller
         return ['message' => 'Task created!'];
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         Task::findOrFail($id)->delete();
 
